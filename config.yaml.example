@@ -1,21 +1,108 @@
-# GitHub Backup Konfiguration
-# Kopiere diese Datei nach config.yaml und passe sie an
+# GitHub Backup Configuration
+# Produktionsreife Konfiguration mit Sicherheitsverbesserungen
 
+# Liste der GitHub-Accounts die gesichert werden sollen
 accounts:
-  # Füge hier deine GitHub-Accounts hinzu
-  - name: DeinGitHubAccount
-    use_ssh: true  # Empfohlen: Nutzt SSH-Keys für Git-Operationen
-    # token: ${GITHUB_TOKEN}  # Optional: Nur wenn du kein gh CLI hast
-    
-  # Beispiel für mehrere Accounts:
-  # - name: ArbeitsAccount
-  #   use_ssh: true
-  # - name: PrivatAccount  
-  #   use_ssh: true
+  - name: YourGitHubUsername
+    # Token ist optional - empfohlen ist die Verwendung von SSH oder gh CLI
+    # Falls Token verwendet wird, nutze Umgebungsvariablen:
+    # token: ${GITHUB_TOKEN_YOURUSER}
+    use_ssh: true  # Empfohlen: SSH für git Operationen verwenden
 
+  # Weitere Accounts können hier hinzugefügt werden
+  # - name: AnotherAccount
+  #   token: ${GITHUB_TOKEN_ANOTHER}
+  #   use_ssh: false
+
+# Webhook-Konfiguration für Sicherheit
+webhook:
+  # Secret für GitHub Webhook Signatur-Verifizierung
+  # WICHTIG: Verwende ein starkes, zufälliges Secret!
+  # Generiere mit: openssl rand -hex 32
+  secret: ${WEBHOOK_SECRET}
+  
+  # Erlaubte GitHub IPs (optional, aber empfohlen)
+  # GitHub's IP-Bereiche: https://api.github.com/meta
+  allowed_ips:
+    - "192.30.252.0/22"
+    - "185.199.108.0/22"
+    - "140.82.112.0/20"
+    - "143.55.64.0/20"
+
+# Einstellungen
 settings:
-  # Wie lange Snapshots aufbewahrt werden (in Tagen)
+  # Wie lange sollen Snapshots aufbewahrt werden (in Tagen)
   keep_snapshots_days: 30
   
-  # Maximale Log-Dateigröße in MB vor Rotation
+  # Maximale Log-Dateigröße bevor Rotation (in MB)
   log_max_size_mb: 100
+  
+  # Backup-Verzeichnis (relativ oder absolut)
+  # backup_dir: ./backups  # Standard
+  
+  # Log-Verzeichnis (relativ oder absolut)
+  # log_dir: ./logs  # Standard
+  
+  # Timeouts (in Sekunden)
+  git_timeout: 300      # 5 Minuten für Git-Operationen
+  api_timeout: 30       # 30 Sekunden für API-Calls
+  
+  # Retry-Konfiguration
+  max_retries: 3
+  retry_backoff: 2      # Exponential backoff Faktor
+  
+  # Rate Limiting
+  rate_limit_threshold: 10  # Warnung wenn weniger als X Requests übrig
+  rate_limit_wait: 60       # Wartezeit in Sekunden bei Rate Limit
+
+# Sicherheitseinstellungen
+security:
+  # Validierung von Repository- und Account-Namen
+  validate_names: true
+  
+  # Verhindere Backup in System-Verzeichnisse
+  prevent_system_paths: true
+  
+  # Maskiere sensitive Daten in Logs
+  mask_sensitive_data: true
+  
+  # Erlaube nur diese Event-Typen für Webhooks
+  allowed_webhook_events:
+    - push
+    - create
+    - delete
+    - release
+    - force-push
+    - branch-delete
+    - tag-delete
+
+# Benachrichtigungen (optional)
+notifications:
+  # E-Mail Benachrichtigung bei Fehlern
+  # email:
+  #   enabled: false
+  #   smtp_host: smtp.gmail.com
+  #   smtp_port: 587
+  #   smtp_user: ${SMTP_USER}
+  #   smtp_pass: ${SMTP_PASS}
+  #   from: backup@example.com
+  #   to: admin@example.com
+  
+  # Slack/Discord Webhook für Benachrichtigungen
+  # webhook:
+  #   enabled: false
+  #   url: ${NOTIFICATION_WEBHOOK_URL}
+
+# Erweiterte Optionen
+advanced:
+  # Parallel-Backups (Vorsicht: kann Rate Limits erreichen)
+  parallel_backups: 1
+  
+  # Kompression für Snapshots
+  compress_snapshots: false
+  
+  # Prüfsummen für Backup-Integrität
+  create_checksums: true
+  
+  # Backup-Verifizierung nach Abschluss
+  verify_backups: true
