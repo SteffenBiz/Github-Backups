@@ -3,8 +3,8 @@
 # Webhook Backup Wrapper - Produktionsreife Version
 # Dieses Script wird vom externen Webhook-Server aufgerufen
 #
-# Verwendung: webhook-backup.sh <repo-name> [event-type] [signature] [secret]
-# Beispiel: webhook-backup.sh Test-Repo push sha256=abc123... mysecret
+# Verwendung: webhook-backup.sh <account/repo-name> [event-type] [signature] [secret]
+# Beispiel: webhook-backup.sh SteffenBiz/Test-Repo push sha256=abc123... mysecret
 #
 # Sicherheitsverbesserungen:
 # - Eingabevalidierung für alle Parameter
@@ -65,20 +65,22 @@ fi
 validate_input "$REPO_NAME" "Repository-Name"
 validate_input "$EVENT_TYPE" "Event-Type"
 
-# Account aus dem Repository-Namen extrahieren (falls im Format Account/Repo)
-if [[ "$REPO_NAME" == *"/"* ]]; then
-    # Sichere Extraktion mit Parameter Expansion
-    ACCOUNT="${REPO_NAME%%/*}"
-    REPO="${REPO_NAME#*/}"
-    
-    # Nochmals validieren nach Aufteilung
-    validate_input "$ACCOUNT" "Account-Name"
-    validate_input "$REPO" "Repository-Name (nach Split)"
-else
-    # Standard-Account aus config.yaml verwenden
-    # Kann über Umgebungsvariable DEFAULT_ACCOUNT überschrieben werden
-    ACCOUNT="${DEFAULT_ACCOUNT:-SteffenBiz}"
-    REPO="$REPO_NAME"
+# Repository-Name muss im Format Account/Repository sein
+if [[ "$REPO_NAME" != *"/"* ]]; then
+    error_exit "Repository-Name muss im Format 'Account/Repository' sein. Erhalten: $REPO_NAME"
+fi
+
+# Account und Repository extrahieren
+ACCOUNT="${REPO_NAME%%/*}"
+REPO="${REPO_NAME#*/}"
+
+# Validieren nach Aufteilung
+validate_input "$ACCOUNT" "Account-Name"
+validate_input "$REPO" "Repository-Name"
+
+# Sicherstellen dass die Aufteilung korrekt war
+if [[ -z "$ACCOUNT" ]] || [[ -z "$REPO" ]] || [[ "$REPO" == *"/"* ]]; then
+    error_exit "Ungültiges Repository-Format. Erwartet: 'Account/Repository', erhalten: $REPO_NAME"
 fi
 
 # Webhook-Signatur verifizieren (falls vorhanden)
