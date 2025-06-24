@@ -71,6 +71,18 @@ settings:
   keep_snapshots_days: 30
 ```
 
+## Konfiguration des Standard-Accounts
+
+Das webhook-backup.sh Script verwendet standardmäßig "SteffenBiz" als Account, wenn kein Account im Repository-Namen angegeben ist. Dies kann über die Umgebungsvariable `DEFAULT_ACCOUNT` geändert werden:
+
+```bash
+# Auf pixel-hotel in /home/hotel/.bashrc oder systemd service:
+export DEFAULT_ACCOUNT="Pixel-Hotel"
+
+# Oder direkt beim Aufruf:
+DEFAULT_ACCOUNT="Pixel-Hotel" ./webhook-backup.sh Repository-Name push
+```
+
 ## Setup-Anleitung
 
 ### 1. Webhook-Server einrichten (falls noch nicht geschehen)

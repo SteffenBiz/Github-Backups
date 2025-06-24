@@ -76,7 +76,8 @@ if [[ "$REPO_NAME" == *"/"* ]]; then
     validate_input "$REPO" "Repository-Name (nach Split)"
 else
     # Standard-Account aus config.yaml verwenden
-    ACCOUNT="SteffenBiz"
+    # Kann über Umgebungsvariable DEFAULT_ACCOUNT überschrieben werden
+    ACCOUNT="${DEFAULT_ACCOUNT:-SteffenBiz}"
     REPO="$REPO_NAME"
 fi
 
