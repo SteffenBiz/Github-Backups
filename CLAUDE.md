@@ -112,3 +112,64 @@ backups/
 - Metadata is refreshed on every backup run
 - Webhook events require signature verification if secret is configured
 - Always validate inputs before processing
+
+## Development and Production Environment
+
+### Development System (Local)
+- **Location**: Your local development machine
+- **Repository**: https://github.com/SteffenBiz/Github-Backups
+- **Purpose**: Development, testing, and updates
+- **Workflow**:
+  1. Make changes locally
+  2. Test thoroughly
+  3. Commit and push to GitHub
+  4. Use `update.sh` on production server to pull changes
+
+### Production System (pixel-hotel)
+- **Location**: `/home/hotel/github-backups/`
+- **User**: hotel
+- **Integration**: Works with Github-Webhook server at `/home/hotel/github-webhook/`
+- **Purpose**: Automated backups triggered by webhook events
+
+### Update Workflow
+1. **Development**: Make and test changes locally
+2. **Push**: `git push origin main`
+3. **Deploy**: SSH to pixel-hotel and run:
+   ```bash
+   cd /home/hotel/github-backups
+   ./update.sh
+   ```
+
+### Webhook Integration Details
+- **Webhook Server**: Runs independently at `/home/hotel/github-webhook/`
+- **Configuration**: `webhook.json` contains backup commands for each repository
+- **Flow**: GitHub → Webhook Server → webhook-backup.sh → ghbackup.py
+- **Example webhook.json entry**:
+  ```json
+  "Pixel-Hotel/CMS": {
+    "refs/heads/main": "cd ../cms/prod && ./update.sh && /home/hotel/github-backups/webhook-backup.sh CMS push"
+  }
+  ```
+
+### Server-Specific Configuration
+On pixel-hotel, the system is configured for:
+- **Account**: Pixel-Hotel (all 10 repositories)
+- **Authentication**: SSH (keys already configured)
+- **Backups Location**: `/home/hotel/github-backups/backups/`
+- **Logs**: `/home/hotel/github-backups/logs/`
+
+### Testing on Production
+```bash
+# Manual backup test
+cd /home/hotel/github-backups
+./ghbackup backup Pixel-Hotel Proxy
+
+# Check status
+./ghbackup status
+
+# View logs
+tail -f logs/backup.log
+
+# Check webhook logs
+tail -f /home/hotel/github-webhook/logs/webhook.log
+```
