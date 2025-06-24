@@ -1,0 +1,19 @@
+{
+  "repository_commands": {
+    "SteffenBiz/Github-Backups": {
+      "refs/heads/main": "~/github-backups/webhook-backup.sh Github-Backups push",
+      "refs/heads/develop": "~/github-backups/webhook-backup.sh Github-Backups push"
+    },
+    "SteffenBiz/Github-Webhook": {
+      "refs/heads/main": "~/github-backups/webhook-backup.sh Github-Webhook push",
+      "refs/heads/master": "~/github-backups/webhook-backup.sh Github-Webhook push"
+    },
+    "SteffenBiz/SSH-Manager": {
+      "refs/heads/main": "~/github-backups/webhook-backup.sh SSH-Manager push"
+    },
+    "SteffenBiz/jade": {
+      "refs/heads/main": "~/github-backups/webhook-backup.sh jade push",
+      "refs/heads/develop": "~/github-backups/webhook-backup.sh jade push"
+    }
+  }
+}

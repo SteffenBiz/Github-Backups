@@ -1,0 +1,21 @@
+# GitHub Backup Konfiguration
+# Kopiere diese Datei nach config.yaml und passe sie an
+
+accounts:
+  # Füge hier deine GitHub-Accounts hinzu
+  - name: DeinGitHubAccount
+    use_ssh: true  # Empfohlen: Nutzt SSH-Keys für Git-Operationen
+    # token: ${GITHUB_TOKEN}  # Optional: Nur wenn du kein gh CLI hast
+    
+  # Beispiel für mehrere Accounts:
+  # - name: ArbeitsAccount
+  #   use_ssh: true
+  # - name: PrivatAccount  
+  #   use_ssh: true
+
+settings:
+  # Wie lange Snapshots aufbewahrt werden (in Tagen)
+  keep_snapshots_days: 30
+  
+  # Maximale Log-Dateigröße in MB vor Rotation
+  log_max_size_mb: 100

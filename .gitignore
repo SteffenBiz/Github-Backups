@@ -1,0 +1,22 @@
+# Virtual Environment
+venv/
+__pycache__/
+*.pyc
+
+# Backup-Daten
+backups/
+
+# Logs
+logs/
+*.log
+
+# Konfiguration mit Tokens
+config.yaml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
