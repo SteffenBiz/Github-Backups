@@ -12,7 +12,7 @@ Ein robustes, produktionsreifes Backup-System für GitHub-Repositories mit umfas
 - **Inkrementelle Backups**: Holt nur neue Änderungen ab
 - **Automatische Snapshots**: Erstellt Snapshots bei kritischen Events (force-push, branch-delete, tag-delete)
 - **Einfache Wiederherstellung**: Vollständige Repository-Wiederherstellung mit einem Befehl
-- **Webhook-Integration**: Arbeitet mit GitHub-Webhooks für event-gesteuerte Backups
+- **Webhook-Integration**: Arbeitet mit externem Webhook-Server für event-gesteuerte Backups
 
 ## Sicherheitsfeatures
 
@@ -101,13 +101,18 @@ Ein robustes, produktionsreifes Backup-System für GitHub-Repositories mit umfas
 ```
 
 ### Webhook-Integration
+
+Das Backup-System arbeitet mit dem separaten [Github-Webhook](https://github.com/SteffenBiz/Github-Webhook) Server zusammen, der bereits auf deinem Server läuft. Das Backup-System selbst hat keine eigene Webhook-Funktionalität.
+
 ```bash
-# Webhook-Backup mit Event-Typ
+# Wird vom Webhook-Server aufgerufen:
 ./webhook-backup.sh <repository> <event-type> [signature] [secret]
 
 # Beispiel:
 ./webhook-backup.sh SteffenBiz/Test-Repo push
 ```
+
+Die `webhook-config.json` gehört zum Webhook-Server und definiert, welche Backup-Befehle bei GitHub-Events ausgeführt werden.
 
 ## Konfiguration
 

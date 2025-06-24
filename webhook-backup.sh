@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Webhook Backup Wrapper - Produktionsreife Version
-# Dieses Script wird von der GitHub Webhook aufgerufen
+# Dieses Script wird vom externen Webhook-Server aufgerufen
 #
 # Verwendung: webhook-backup.sh <repo-name> [event-type] [signature] [secret]
 # Beispiel: webhook-backup.sh Test-Repo push sha256=abc123... mysecret

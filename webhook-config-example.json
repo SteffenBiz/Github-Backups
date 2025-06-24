@@ -1,4 +1,6 @@
 {
+  "// HINWEIS": "Diese Datei ist ein Beispiel für die Konfiguration des externen Webhook-Servers",
+  "// INFO": "Diese Datei gehört zum Github-Webhook Projekt, nicht zum Backup-System",
   "repository_commands": {
     "SteffenBiz/Github-Backups": {
       "refs/heads/main": "~/github-backups/webhook-backup.sh Github-Backups push",
